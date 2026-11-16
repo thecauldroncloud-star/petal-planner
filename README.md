@@ -1,4 +1,4 @@
-# Petal to the Metal
+# Petal Planner
 
 An undated cherry-blossom planner in pastel purple that installs to your phone's home screen and works offline.
 
