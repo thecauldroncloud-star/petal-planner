@@ -7,13 +7,13 @@
 <meta name="theme-color" content="#1d1828" media="(prefers-color-scheme: dark)">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Petal Planner">
+<meta name="apple-mobile-web-app-title" content="Pretty &amp; Productive">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" href="icons/icon-192.png">
 <style>html{color-scheme:light}:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0;font:14px system-ui,sans-serif;-webkit-tap-highlight-color:transparent}img{max-width:100%}</style>
-<title>Petal Planner</title>
+<title>Pretty &amp; Productive</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600&family=Nunito:wght@400;600;700&family=Caveat:wght@500;700&display=swap">
@@ -161,7 +161,7 @@ body{background-image:radial-gradient(circle at 8% 12%,color-mix(in srgb,var(--p
 .top{position:relative;padding-right:250px;min-height:96px;align-items:start;flex-direction:column;justify-content:start}
 .branch{position:absolute;right:-6px;top:-18px;width:260px;height:auto;pointer-events:none}
 @media (max-width:560px){.top{padding-right:140px}.branch{width:150px;top:-8px;right:-14px}}
-[hidden]{display:none!important}
+
 .page{position:relative;overflow:hidden}
 .page>*{position:relative;z-index:1}
 .page .corner{position:absolute;z-index:0;width:170px;right:-20px;bottom:-24px;opacity:.6;pointer-events:none}
@@ -206,7 +206,53 @@ body{background-image:radial-gradient(circle at 8% 12%,color-mix(in srgb,var(--p
 @media (max-width:560px){.tbtn{width:22px;height:22px;font-size:.75rem}.collage{gap:6px}.tile{border-width:3px}}
 .collage-frame .pf-bloom{position:absolute;width:64px;pointer-events:none;z-index:3}
 .collage-frame .tl{left:-14px;top:-14px}.collage-frame .br{right:-14px;bottom:-14px;transform:rotate(180deg)}
-.backup{display:flex;gap:6px;margin-top:6px}
+/* month picker */
+.monthpick{display:flex;align-items:center;gap:10px;margin:2px 0 14px}
+.monthpick .eyebrow{margin:0}
+.selwrap{position:relative;display:inline-block}
+.selwrap::after{content:"";position:absolute;right:14px;top:50%;width:8px;height:8px;border:solid var(--accent);border-width:0 2px 2px 0;transform:translateY(-70%) rotate(45deg);pointer-events:none}
+#monthsel{appearance:none;-webkit-appearance:none;font:500 1.15rem var(--f-display);color:var(--ink);background:var(--paper);border:1.5px solid var(--lilac);border-radius:999px;padding:8px 42px 8px 18px;cursor:pointer;box-shadow:0 0 0 3px color-mix(in srgb,var(--petal) 45%,transparent)}
+.branch svg,.garland svg{width:100%;height:auto;display:block}
+/* settings */
+.settings{margin-top:26px;display:flex;flex-direction:column;align-items:center;gap:12px}
+.settings-toggle{font:500 1rem var(--f-display);background:var(--paper);color:var(--ink);border:1.5px solid var(--lilac);border-radius:999px;padding:9px 20px;cursor:pointer}
+.settings-toggle[aria-expanded="true"]{background:var(--lilac-soft)}
+.settings-body{width:100%;background:var(--paper);border:1.5px solid var(--lilac);border-radius:var(--r);padding:20px;display:flex;flex-direction:column;gap:22px}
+.set-block{display:flex;flex-direction:column;gap:10px}
+.set-actions{display:flex;flex-wrap:wrap;gap:8px}
+.themes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+@media (max-width:560px){.themes{grid-template-columns:1fr}}
+.theme-card{display:grid;grid-template-columns:44px 1fr;grid-template-rows:auto auto;gap:4px 12px;align-items:center;text-align:left;background:var(--bg);border:1.5px solid var(--line);border-radius:14px;padding:10px 12px;cursor:pointer;color:var(--ink);font:600 .9rem var(--f-body)}
+.theme-card[aria-checked="true"]{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
+.th-prev{grid-row:span 2;width:44px;height:44px;border-radius:50%;background:var(--paper);display:grid;place-items:center}
+.th-prev svg{width:34px;height:34px}
+.th-sw{display:flex;gap:4px}.th-sw i{width:16px;height:16px;border-radius:50%;border:1px solid var(--line)}
+/* theme palettes */
+:root{--orn:"✿ ";--orns:"✿  ❀  ✿"}
+.quote::before{content:var(--orns)}
+.tabs button[aria-selected="true"]::before{content:var(--orn)}
+:root[data-pp="summer"]{--bg:#f3effd;--paper:#fefcff;--line:#e2d9f6;--lilac:#c3aef0;--lilac-soft:#ebe4fb;--accent:#7656d0;--accent-ink:#ffffff;--ink:#352a5c;--muted:#776c99;--petal:#c9b0f4;--petal-deep:#9670e0;--branch:#86ab7f;--orn:"❀ ";--orns:"❀  ✿  ❀"}
+:root[data-pp="autumn"]{--bg:#f8f0ea;--paper:#fffaf6;--line:#efdcd0;--lilac:#d7b4c4;--lilac-soft:#f3e3e6;--accent:#9b4f6e;--accent-ink:#ffffff;--ink:#43293a;--muted:#8a6c78;--petal:#eeb07e;--petal-deep:#c9653f;--branch:#7b5a48;--orn:"❦ ";--orns:"❧  ❦  ❧"}
+:root[data-pp="winter"]{--bg:#eef2fa;--paper:#fbfdff;--line:#dae2f2;--lilac:#b6c3ea;--lilac-soft:#e5ebf8;--accent:#5b6fc2;--accent-ink:#ffffff;--ink:#28304f;--muted:#6a7594;--petal:#bcd2f3;--petal-deep:#7e9cd8;--branch:#8b95ad;--orn:"❄ ";--orns:"❅  ❄  ❅"}
+@media (prefers-color-scheme: dark){
+ :root[data-pp="summer"]:not([data-theme="light"]){--bg:#191630;--paper:#24203f;--line:#3a3360;--lilac:#7a66b8;--lilac-soft:#302a52;--accent:#b8a2f5;--accent-ink:#191630;--ink:#eee9fd;--muted:#a99fcb;--petal:#8f74d0;--petal-deep:#c2a8f8;--branch:#7fa37a}
+ :root[data-pp="autumn"]:not([data-theme="light"]){--bg:#21171c;--paper:#2d2026;--line:#4a3540;--lilac:#8c5f74;--lilac-soft:#3c2a33;--accent:#e3a0bb;--accent-ink:#21171c;--ink:#f6e9ee;--muted:#bfa3ae;--petal:#c98452;--petal-deep:#eea270;--branch:#a88470}
+ :root[data-pp="winter"]:not([data-theme="light"]){--bg:#141a2b;--paper:#1d2439;--line:#33405e;--lilac:#5e6fa6;--lilac-soft:#273150;--accent:#a9bbf5;--accent-ink:#141a2b;--ink:#eaf0fd;--muted:#9eabc9;--petal:#dfe9fb;--petal-deep:#a7c1f0;--branch:#8592b3}}
+:root[data-pp="summer"][data-theme="dark"]{--bg:#191630;--paper:#24203f;--line:#3a3360;--lilac:#7a66b8;--lilac-soft:#302a52;--accent:#b8a2f5;--accent-ink:#191630;--ink:#eee9fd;--muted:#a99fcb;--petal:#8f74d0;--petal-deep:#c2a8f8;--branch:#7fa37a}
+:root[data-pp="autumn"][data-theme="dark"]{--bg:#21171c;--paper:#2d2026;--line:#4a3540;--lilac:#8c5f74;--lilac-soft:#3c2a33;--accent:#e3a0bb;--accent-ink:#21171c;--ink:#f6e9ee;--muted:#bfa3ae;--petal:#c98452;--petal-deep:#eea270;--branch:#a88470}
+:root[data-pp="winter"][data-theme="dark"]{--bg:#141a2b;--paper:#1d2439;--line:#33405e;--lilac:#5e6fa6;--lilac-soft:#273150;--accent:#a9bbf5;--accent-ink:#141a2b;--ink:#eaf0fd;--muted:#9eabc9;--petal:#dfe9fb;--petal-deep:#a7c1f0;--branch:#8592b3}
+.th-motif[data-pp="sakura"]{--petal:#f6c9dc;--petal-deep:#e79bbd;--branch:#8b6a7e;--lilac:#cdb9ec}
+.th-motif[data-pp="summer"]{--petal:#c9b0f4;--petal-deep:#9670e0;--branch:#86ab7f;--lilac:#c3aef0}
+.th-motif[data-pp="autumn"]{--petal:#eeb07e;--petal-deep:#c9653f;--branch:#7b5a48;--lilac:#d7b4c4}
+.th-motif[data-pp="winter"]{--petal:#bcd2f3;--petal-deep:#7e9cd8;--branch:#8b95ad;--lilac:#b6c3ea}
+/* falling things per theme */
+.petals[data-k="summer"] i{width:5px;height:11px;border-radius:50%;background:var(--petal-deep);opacity:.55}
+.petals[data-k="autumn"] i{width:15px;height:15px;border-radius:0 100% 0 100%;background:var(--petal)}
+.petals[data-k="autumn"] i:nth-child(3n){background:var(--petal-deep)}
+.petals[data-k="autumn"] i:nth-child(3n+1){background:var(--lilac)}
+.petals[data-k="winter"] i{width:8px;height:8px;border-radius:50%;background:var(--petal);box-shadow:0 0 5px var(--petal-deep);opacity:.8}
+.petals[data-k] i.fl{width:auto;height:auto;background:none;box-shadow:none;border-radius:0;color:var(--petal-deep)}
+.petals[data-k="sakura"] i.fl{color:var(--petal)}
 [hidden]{display:none!important}
 </style>
 
@@ -216,24 +262,37 @@ body{background-image:radial-gradient(circle at 8% 12%,color-mix(in srgb,var(--p
 <div class="wrap">
   <div class="top">
     <div>
-      <h1>Petal Planner</h1>
-      <div class="sub">No dates or year, so you can start in any year. Pick a month below.</div>
+      <h1>Pretty &amp; Productive</h1>
+      <div class="sub">No dates or year, so you can start any time.</div>
     </div>
-    <svg class="branch" viewBox="0 0 260 140" aria-hidden="true"><path d="M260 16 C210 22 170 38 132 64 S60 108 6 116" fill="none" stroke="var(--branch)" stroke-width="5" stroke-linecap="round"/><path d="M160 44 C156 26 168 12 184 6 M96 88 C104 104 120 114 136 120 M210 26 C222 40 236 46 250 48" fill="none" stroke="var(--branch)" stroke-width="2.5" stroke-linecap="round"/><g transform="translate(184 8) scale(1) rotate(0)"><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(0)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(72)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(144)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(216)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(288)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><circle r="3" fill="var(--petal-deep)"/></g><g transform="translate(132 64) scale(1.25) rotate(20)"><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(0)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(72)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(144)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(216)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(288)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><circle r="3" fill="var(--petal-deep)"/></g><g transform="translate(84 94) scale(1) rotate(40)"><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(0)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(72)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(144)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(216)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(288)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><circle r="3" fill="var(--petal-deep)"/></g><g transform="translate(36 108) scale(0.85) rotate(0)"><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(0)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(72)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(144)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(216)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(288)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><circle r="3" fill="var(--petal-deep)"/></g><g transform="translate(136 118) scale(0.85) rotate(15)"><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(0)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(72)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(144)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(216)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(288)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><circle r="3" fill="var(--petal-deep)"/></g><g transform="translate(222 24) scale(0.8) rotate(30)"><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(0)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(72)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(144)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(216)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(288)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><circle r="3" fill="var(--petal-deep)"/></g><g transform="translate(250 46) scale(0.7) rotate(0)"><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(0)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(72)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(144)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(216)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(288)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><circle r="3" fill="var(--petal-deep)"/></g><g transform="translate(160 40) scale(0.65) rotate(50)"><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(0)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(72)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(144)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(216)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(288)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><circle r="3" fill="var(--petal-deep)"/></g><g transform="translate(108 80) scale(0.6) rotate(0)"><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(0)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(72)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(144)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(216)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(288)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><circle r="3" fill="var(--petal-deep)"/></g><g transform="translate(10 114) scale(0.6) rotate(25)"><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(0)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(72)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(144)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(216)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(288)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><circle r="3" fill="var(--petal-deep)"/></g><circle cx="200" cy="18" r="3.5" fill="var(--petal-deep)"/><circle cx="146" cy="52" r="3.5" fill="var(--petal-deep)"/><circle cx="60" cy="102" r="3.5" fill="var(--petal-deep)"/><circle cx="116" cy="108" r="3" fill="var(--petal-deep)"/><circle cx="236" cy="40" r="3" fill="var(--petal-deep)"/></svg>
+    <div class="branch" id="deco-branch" aria-hidden="true"></div>
     <div class="status" id="status" aria-live="polite">Loading…</div>
-    <div class="backup"><button class="btn ghost small" id="bk-export">Back up</button><button class="btn ghost small" id="bk-import">Restore</button><input type="file" id="bk-file" accept="application/json,.json" hidden></div>
   </div>
-  <nav class="months" id="months" aria-label="Planner months"></nav>
+  <div class="monthpick"><label for="monthsel" class="eyebrow">Month</label><div class="selwrap"><select id="monthsel"></select></div></div>
   <div class="tabs" role="tablist" id="tabs"></div>
   <section class="page" id="page" role="tabpanel"></section>
-  <svg class="garland" viewBox="0 0 600 70" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><path d="M0 20 C120 70 220 0 300 34 S480 70 600 18" fill="none" stroke="var(--branch)" stroke-width="3" stroke-linecap="round"/><g transform="translate(40 32) scale(0.9) rotate(0)"><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(0)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(72)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(144)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(216)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(288)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><circle r="3" fill="var(--petal-deep)"/></g><g transform="translate(110 48) scale(1.1) rotate(30)"><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(0)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(72)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(144)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(216)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(288)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><circle r="3" fill="var(--petal-deep)"/></g><g transform="translate(180 30) scale(0.8) rotate(10)"><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(0)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(72)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(144)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(216)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(288)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><circle r="3" fill="var(--petal-deep)"/></g><g transform="translate(250 28) scale(1) rotate(45)"><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(0)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(72)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(144)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(216)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(288)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><circle r="3" fill="var(--petal-deep)"/></g><g transform="translate(320 38) scale(1.2) rotate(0)"><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(0)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(72)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(144)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(216)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(288)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><circle r="3" fill="var(--petal-deep)"/></g><g transform="translate(390 52) scale(0.9) rotate(20)"><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(0)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(72)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(144)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(216)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(288)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><circle r="3" fill="var(--petal-deep)"/></g><g transform="translate(460 50) scale(1) rotate(35)"><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(0)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(72)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(144)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(216)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(288)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><circle r="3" fill="var(--petal-deep)"/></g><g transform="translate(530 36) scale(0.85) rotate(5)"><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(0)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(72)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(144)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(216)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(288)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><circle r="3" fill="var(--petal-deep)"/></g><g transform="translate(585 22) scale(0.7) rotate(25)"><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(0)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(72)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(144)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(216)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(288)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><circle r="3" fill="var(--petal-deep)"/></g><circle cx="74" cy="42" r="3.5" fill="var(--petal-deep)"/><circle cx="146" cy="42" r="3.5" fill="var(--petal-deep)"/><circle cx="216" cy="26" r="3.5" fill="var(--petal-deep)"/><circle cx="286" cy="30" r="3.5" fill="var(--petal-deep)"/><circle cx="356" cy="46" r="3.5" fill="var(--petal-deep)"/><circle cx="426" cy="54" r="3.5" fill="var(--petal-deep)"/><circle cx="496" cy="46" r="3.5" fill="var(--petal-deep)"/><circle cx="560" cy="28" r="3.5" fill="var(--petal-deep)"/></svg>
+  <div class="garland" id="deco-garland" aria-hidden="true"></div>
   <p class="foot" id="foot"></p><p class="foot-by" id="footby"></p>
+  <section class="settings" aria-label="Settings">
+    <button class="settings-toggle" id="settings-toggle" aria-expanded="false" aria-controls="settings-body"><span aria-hidden="true">⚙</span> Settings</button>
+    <div id="settings-body" class="settings-body" hidden>
+      <div class="set-block">
+        <h3>Theme</h3>
+        <div class="themes" id="themes" role="radiogroup" aria-label="Theme"></div>
+      </div>
+      <div class="set-block">
+        <h3>Back up &amp; restore</h3>
+        <p class="sub">Back up saves every month (calendar, notes, doodles and photos) into one file. Restore loads a backup file and replaces what's in your planner now.</p>
+        <div class="set-actions"><button class="btn" id="bk-export">Back up</button><button class="btn ghost" id="bk-import">Restore</button><input type="file" id="bk-file" accept="application/json,.json" hidden></div>
+        <div class="confirm" id="bk-confirm" hidden><span id="bk-confirm-text"></span><button class="btn small" id="bk-yes">Replace my planner</button><button class="btn ghost small" id="bk-no">Cancel</button></div>
+        <p class="sub" id="bk-msg" aria-live="polite"></p>
+      </div>
+    </div>
+  </section>
 </div>
 
 <script>
-const CORNER=`<svg class="corner" viewBox="0 0 160 160" aria-hidden="true"><path d="M160 50 C120 60 92 92 78 160 M120 66 C130 90 146 100 160 104" fill="none" stroke="var(--branch)" stroke-width="3" stroke-linecap="round"/><g transform="translate(126 60) scale(1.2) rotate(0)"><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(0)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(72)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(144)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(216)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(288)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><circle r="3" fill="var(--petal-deep)"/></g><g transform="translate(92 96) scale(1) rotate(30)"><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(0)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(72)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(144)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(216)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(288)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><circle r="3" fill="var(--petal-deep)"/></g><g transform="translate(148 104) scale(0.9) rotate(15)"><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(0)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(72)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(144)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(216)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(288)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><circle r="3" fill="var(--petal-deep)"/></g><g transform="translate(80 140) scale(0.8) rotate(0)"><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(0)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(72)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(144)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(216)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(288)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><circle r="3" fill="var(--petal-deep)"/></g><g transform="translate(150 40) scale(0.7) rotate(40)"><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(0)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(72)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(144)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(216)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(288)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><circle r="3" fill="var(--petal-deep)"/></g><circle cx="108" cy="80" r="3.5" fill="var(--petal-deep)"/><circle cx="136" cy="84" r="3" fill="var(--petal-deep)"/></svg>`;
 const MONTHS=["January","February","March","April","May","June","July","August","September","October","November","December"];
-const BLOOM=`<svg viewBox="-20 -20 40 40"><g transform="translate(0 0) scale(1.4) rotate(0)"><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(0)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(72)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(144)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(216)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(288)" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/><circle r="3" fill="var(--petal-deep)"/></g></svg>`;
 const FOOT_QUOTES=[
  ["New beginnings are often disguised as small, quiet steps.","Unknown"],
  ["Believe you can and you're halfway there.","Theodore Roosevelt"],
@@ -247,6 +306,40 @@ const FOOT_QUOTES=[
  ["You are braver than you believe, stronger than you seem, and smarter than you think.","A.A. Milne"],
  ["Gratitude turns what we have into enough.","Unknown"],
  ["What lies behind us and what lies before us are tiny matters compared to what lies within us.","Ralph Waldo Emerson"]];
+const THEMES={
+ sakura:{name:"Cherry Blossom",sw:["#f6c9dc","#cdb9ec","#8a6cc7","#f3eefb"],fl:"✿"},
+ summer:{name:"Summer Lilac & Lavender Dreams",sw:["#c9b0f4","#86ab7f","#7656d0","#f3effd"],fl:"❀"},
+ autumn:{name:"Autumn in My Heart",sw:["#eeb07e","#c9653f","#9b4f6e","#f8f0ea"],fl:"❦"},
+ winter:{name:"Winter Wonderland",sw:["#bcd2f3","#7e9cd8","#5b6fc2","#eef2fa"],fl:"❄"}};
+let theme="sakura";try{const t=localStorage.getItem("lavplan:theme");if(THEMES[t])theme=t}catch(e){}
+function motif(x,y,s,a,i,th){th=th||theme;const g=`<g transform="translate(${x} ${y}) scale(${s}) rotate(${a||0})">`;
+ if(th==="summer"){let e=`<path d="M0 17 L0 -15" stroke="var(--branch)" stroke-width="1.6" stroke-linecap="round"/>`;for(let k=0;k<6;k++){const yy=-13+k*4.6,xx=(k%2?2.6:-2.6)*(1-k*.08);e+=`<ellipse cx="${xx}" cy="${yy}" rx="${(3.2-k*.15).toFixed(2)}" ry="4.3" transform="rotate(${k%2?22:-22} ${xx} ${yy})" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width=".8"/>`}return g+e+"</g>"}
+ if(th==="autumn"){const f=["var(--petal)","var(--petal-deep)","var(--lilac)"][(i||0)%3];return g+`<path d="M0 -14 C10 -8 11 5 0 14 C-11 5 -10 -8 0 -14Z" fill="${f}" stroke="var(--petal-deep)" stroke-width="1"/><path d="M0 -11 L0 17 M0 -2 L5 -6 M0 4 L-5 0" stroke="var(--branch)" stroke-width="1.1" fill="none" stroke-linecap="round"/></g>`}
+ if(th==="winter"){let e="";for(let k=0;k<6;k++)e+=`<path transform="rotate(${k*60})" d="M0 0 L0 -13 M0 -8 L-3.5 -11 M0 -8 L3.5 -11" stroke="var(--petal-deep)" stroke-width="1.8" stroke-linecap="round" fill="none"/>`;return g+e+`<circle r="2.2" fill="var(--petal-deep)"/></g>`}
+ let e="";for(const r of [0,72,144,216,288])e+=`<ellipse cx="0" cy="-9" rx="6" ry="8.5" transform="rotate(${r})" fill="var(--petal)" stroke="var(--petal-deep)" stroke-width="1"/>`;return g+e+`<circle r="3" fill="var(--petal-deep)"/></g>`}
+const bud=(x,y,r=3.5)=>`<circle cx="${x}" cy="${y}" r="${r}" fill="var(--petal-deep)"/>`;
+const ms=(list)=>list.map((m,i)=>motif(m[0],m[1],m[2],m[3],i)).join("");
+function branchSVG(){return `<svg viewBox="0 0 260 140"><path d="M260 16 C210 22 170 38 132 64 S60 108 6 116" fill="none" stroke="var(--branch)" stroke-width="5" stroke-linecap="round"/><path d="M160 44 C156 26 168 12 184 6 M96 88 C104 104 120 114 136 120 M210 26 C222 40 236 46 250 48" fill="none" stroke="var(--branch)" stroke-width="2.5" stroke-linecap="round"/>`+ms([[184,8,1],[132,64,1.25,20],[84,94,1,40],[36,108,.85],[136,118,.85,15],[222,24,.8,30],[250,46,.7],[160,40,.65,50],[108,80,.6],[10,114,.6,25]])+bud(200,18)+bud(146,52)+bud(60,102)+bud(116,108,3)+bud(236,40,3)+`</svg>`}
+function garlandSVG(){return `<svg viewBox="0 0 600 70" preserveAspectRatio="xMidYMid meet"><path d="M0 20 C120 70 220 0 300 34 S480 70 600 18" fill="none" stroke="var(--branch)" stroke-width="3" stroke-linecap="round"/>`+ms([[40,32,.9,0],[110,48,1.1,30],[180,30,.8,10],[250,28,1,45],[320,38,1.2,0],[390,52,.9,20],[460,50,1,35],[530,36,.85,5],[585,22,.7,25]])+[[74,42],[146,42],[216,26],[286,30],[356,46],[426,54],[496,46],[560,28]].map(b=>bud(b[0],b[1])).join("")+`</svg>`}
+function cornerSVG(){return `<svg class="corner" viewBox="0 0 160 160" aria-hidden="true"><path d="M160 50 C120 60 92 92 78 160 M120 66 C130 90 146 100 160 104" fill="none" stroke="var(--branch)" stroke-width="3" stroke-linecap="round"/>`+ms([[126,60,1.2],[92,96,1,30],[148,104,.9,15],[80,140,.8],[150,40,.7,40]])+bud(108,80)+bud(136,84,3)+`</svg>`}
+function bloomSVG(cls){return `<svg class="${cls}" viewBox="-20 -20 40 40" aria-hidden="true">${motif(0,0,1.4,0,1)}</svg>`}
+function decorate(){
+  document.documentElement.dataset.pp=theme;
+  const b=document.getElementById("deco-branch");if(b)b.innerHTML=branchSVG();
+  const g=document.getElementById("deco-garland");if(g)g.innerHTML=garlandSVG();
+  const box=document.getElementById("petals");box.replaceChildren();box.dataset.k=theme;
+  for(let i=0;i<30;i++){const e=document.createElement("i");if(i%4===0){e.className="fl";e.textContent=THEMES[theme].fl}e.style.left=(Math.random()*100)+"%";e.style.animationDuration=(12+Math.random()*14)+"s";e.style.animationDelay=(-Math.random()*20)+"s";box.append(e)}
+}
+function renderThemes(){
+  const box=document.getElementById("themes");box.replaceChildren();
+  for(const[k,t]of Object.entries(THEMES)){
+    const prev=document.createElement("span");prev.className="th-prev";prev.setAttribute("aria-hidden","true");
+    prev.innerHTML=`<svg viewBox="-20 -20 40 40" data-pp="${k}" class="th-motif">${motif(0,0,1.3,0,1,k)}</svg>`;
+    const b=el("button",{class:"theme-card",role:"radio","aria-checked":k===theme?"true":"false",onclick:()=>{theme=k;try{localStorage.setItem("lavplan:theme",k)}catch(e){}decorate();renderThemes();render()}},
+      prev,el("span",{class:"th-name"},t.name),el("span",{class:"th-sw","aria-hidden":"true"},...t.sw.map(c=>el("i",{style:"background:"+c}))));
+    box.append(b);
+  }
+}
 const TABS=[["cal","Calendar"],["period","Period"],["doodle","Doodle"],["todo","To-do"],["things","10 Things"],["money","Money"],["fit","Fitness"]];
 const DOW=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
 const QUOTES=[
@@ -287,19 +380,21 @@ function M(){return cache[cur]}
 /* ---------- storage ---------- */
 function lsGet(k){try{const v=localStorage.getItem("lavplan:"+k);return v?JSON.parse(v):null}catch(e){return null}}
 function lsSet(k,v){try{localStorage.setItem("lavplan:"+k,JSON.stringify(v));return true}catch(e){return false}}
+/*STORE (app)*/
 const IDB=new Promise((res)=>{try{const r=indexedDB.open("petal-planner",1);r.onupgradeneeded=()=>r.result.createObjectStore("kv");r.onsuccess=()=>res(r.result);r.onerror=()=>res(null)}catch(e){res(null)}});
 async function idbGet(k){const d=await IDB;if(!d)return lsGet(k);return new Promise(r=>{const q=d.transaction("kv").objectStore("kv").get(k);q.onsuccess=()=>r(q.result??null);q.onerror=()=>r(null)})}
 async function idbSet(k,v){const d=await IDB;if(!d)return lsSet(k,v);return new Promise(r=>{const t=d.transaction("kv","readwrite");t.objectStore("kv").put(clone(v),k);t.oncomplete=()=>r(true);t.onerror=()=>r(false)})}
-async function idbAll(){const d=await IDB;const out={};if(!d)return out;return new Promise(r=>{const st=d.transaction("kv").objectStore("kv");const q=st.openCursor();q.onsuccess=()=>{const c=q.result;if(c){out[c.key]=c.value;c.continue()}else r(out)};q.onerror=()=>r(out)})}
 async function load(k){return idbGet(k)}
+async function allData(){const d=await IDB;const out={};if(!d)return out;return new Promise(r=>{const q=d.transaction("kv").objectStore("kv").openCursor();q.onsuccess=()=>{const c=q.result;if(c){if(c.value&&Object.keys(c.value).length)out[c.key]=c.value;c.continue()}else r(out)};q.onerror=()=>r(out)})}
+async function writeKey(k,v){await idbSet(k,v)}
+async function deliver(name,text){
+  const f=new File([text],name,{type:"application/json"});
+  if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:"Planner backup"});return "saved"}catch(e){if(e.name==="AbortError")return "cancelled"}}
+  const a=document.createElement("a");a.href=URL.createObjectURL(f);a.download=name;document.body.append(a);a.click();a.remove();return "saved"}
 const timers={};
 function setStatus(t){$("#status").textContent=t}
-function save(k,val){
-  clearTimeout(timers[k]);setStatus("Saving…");
-  timers[k]=setTimeout(async()=>{
-    const ok=await idbSet(k,val);setStatus(ok?"Saved on this phone":"Couldn't save. Phone storage may be full");
-  },700);
-}
+function save(k,val){clearTimeout(timers[k]);setStatus("Saving…");timers[k]=setTimeout(async()=>{const ok=await idbSet(k,val);setStatus(ok?"Saved on this phone":"Couldn't save. Phone storage may be full")},700)}
+/*END*/
 function touch(){save("m"+cur,M());if(tab!=="cal"&&tab!=="doodle"){}renderMonths()}
 
 async function openMonth(m){
@@ -310,10 +405,9 @@ async function openMonth(m){
 
 /* ---------- chrome ---------- */
 function renderMonths(){
-  const nav=$("#months");nav.replaceChildren();
-  for(let m=1;m<=12;m++){
-    nav.append(el("button",{"aria-pressed":m===cur?"true":"false","aria-label":MONTHS[m-1],onclick:()=>openMonth(m)},el("span",{class:"full"},MONTHS[m-1]),el("span",{class:"short","aria-hidden":"true"},MONTHS[m-1].slice(0,3))));
-  }
+  const sel=$("#monthsel");
+  if(!sel.options.length){MONTHS.forEach((n,i)=>sel.append(el("option",{value:i+1},n)));sel.onchange=()=>openMonth(+sel.value)}
+  sel.value=String(cur);
 }
 function renderTabs(){
   const t=$("#tabs");t.replaceChildren();
@@ -364,7 +458,7 @@ function photoBlock(){
       if(photoImgs[id]!==undefined)show(photoImgs[id]);else load("ph"+mm+"_"+id).then(d=>{photoImgs[id]=d?.img||"";show(photoImgs[id])});
     });
     const fr=el("div",{class:"collage-frame"},grid);
-    fr.insertAdjacentHTML("beforeend",BLOOM.replace("<svg",'<svg class="pf-bloom tl" aria-hidden="true"')+BLOOM.replace("<svg",'<svg class="pf-bloom br" aria-hidden="true"'));
+    fr.insertAdjacentHTML("beforeend",bloomSVG("pf-bloom tl")+bloomSVG("pf-bloom br"));
     const cap=el("input",{type:"text",id:"photocap",placeholder:"Caption (optional)",value:m.cap||""});cap.oninput=()=>{m.cap=cap.value;saveMeta()};
     const left=MAXPH-m.ids.length;
     wrap.append(fr,el("div",{class:"photo-bar"},cap,
@@ -602,7 +696,7 @@ function renderFit(p){
 }
 
 function render(){
-  const p=$("#page");p.replaceChildren();{const fq=FOOT_QUOTES[(cur-1)%12];$("#foot").textContent="“"+fq[0]+"”";$("#footby").textContent="— "+fq[1]}p.insertAdjacentHTML("beforeend",CORNER);
+  const p=$("#page");p.replaceChildren();{const fq=FOOT_QUOTES[(cur-1)%12];$("#foot").textContent="“"+fq[0]+"”";$("#footby").textContent="— "+fq[1]}p.insertAdjacentHTML("beforeend",cornerSVG());
   ({cal:renderCal,period:renderPeriod,doodle:renderDoodle,todo:renderTodo,things:renderThings,money:renderMoney,fit:renderFit})[tab](p);
 }
 
@@ -614,18 +708,20 @@ function render(){
   renderMonths();render();setStatus("Saved on this phone");
   try{navigator.storage&&navigator.storage.persist&&navigator.storage.persist()}catch(e){}
 })();
-async function exportData(){
-  const all=await idbAll();const blob=new Blob([JSON.stringify({app:"petal-to-the-metal",v:1,data:all})],{type:"application/json"});
-  const f=new File([blob],"petal-planner-backup.json",{type:"application/json"});
-  if(navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:"Planner backup"});return}catch(e){if(e.name==="AbortError")return}}
-  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=f.name;document.body.append(a);a.click();a.remove();
-}
-function importData(file){const rd=new FileReader();rd.onload=async()=>{try{const j=JSON.parse(rd.result);if(!j||typeof j.data!=="object")throw 0;for(const[k,v]of Object.entries(j.data))await idbSet(k,v);for(const k in cache)delete cache[k];for(const k in doodleCache)delete doodleCache[k];for(const k in photoCache)delete photoCache[k];for(let m=1;m<=12;m++){const d=await load("m"+m);cache[m]=Object.assign(defaults(m),d||{})}renderMonths();render();setStatus("Backup restored")}catch(e){setStatus("That file isn't a planner backup")}};rd.readAsText(file)}
-document.getElementById("bk-export").onclick=exportData;
-document.getElementById("bk-file").onchange=e=>{const f=e.target.files[0];if(f)importData(f);e.target.value=""};
-document.getElementById("bk-import").onclick=()=>document.getElementById("bk-file").click();
 if("serviceWorker" in navigator)window.addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
-(function(){const box=document.getElementById("petals");for(let i=0;i<30;i++){const e=document.createElement("i");if(i%4===0){e.className="fl";e.textContent="✿"}e.style.left=(Math.random()*100)+"%";e.style.animationDuration=(12+Math.random()*14)+"s";e.style.animationDelay=(-Math.random()*20)+"s";e.style.transform="scale("+(.6+Math.random()*.7)+")";box.append(e)}})();
+decorate();renderThemes();
+$("#settings-toggle").onclick=()=>{const b=$("#settings-body"),open=b.hidden;b.hidden=!open;$("#settings-toggle").setAttribute("aria-expanded",String(open));if(open)b.scrollIntoView({block:"nearest",behavior:"smooth"})};
+let pendingRestore=null;
+const bkMsg=t=>{$("#bk-msg").textContent=t};
+$("#bk-export").onclick=async()=>{bkMsg("Preparing your backup…");try{const all=await allData();const n=Object.keys(all).length;const text=JSON.stringify({app:"pretty-productive",v:1,saved:new Date().toISOString(),data:all});const r=await deliver("pretty-productive-backup.json",text);bkMsg(r==="cancelled"?"":"Backup ready ("+n+" saved pages). Keep it somewhere safe, like iCloud Drive.")}catch(e){bkMsg(e&&e.code==="unavailable"||e&&e.message==="unavailable"?"The backup couldn't be shared. Try again.":"The backup wasn't saved.")}};
+$("#bk-import").onclick=()=>$("#bk-file").click();
+$("#bk-file").onchange=e=>{const f=e.target.files[0];e.target.value="";if(!f)return;const rd=new FileReader();rd.onload=()=>{try{const j=JSON.parse(rd.result);if(!j||typeof j.data!=="object"||!j.data)throw 0;pendingRestore=j;$("#bk-confirm-text").textContent="Restore "+Object.keys(j.data).length+" saved pages from this backup? It replaces what's in your planner now.";$("#bk-confirm").hidden=false;bkMsg("")}catch(_){bkMsg("That file isn't a planner backup. Choose a .json file made with Back up.")}};rd.readAsText(f)};
+$("#bk-no").onclick=()=>{pendingRestore=null;$("#bk-confirm").hidden=true};
+$("#bk-yes").onclick=async()=>{const j=pendingRestore;pendingRestore=null;$("#bk-confirm").hidden=true;if(!j)return;bkMsg("Restoring…");
+  try{for(const[k,v]of Object.entries(j.data)){if(/^(m|d|p)\d{1,2}$|^ph\d{1,2}_[a-z0-9]+$/.test(k)&&v&&typeof v==="object")await writeKey(k,v)}
+  for(const c of [cache,doodleCache,photoCache,photoImgs])for(const k in c)delete c[k];
+  for(let m=1;m<=12;m++){const d=await load("m"+m);cache[m]=Object.assign(defaults(m),d||{})}
+  renderMonths();render();bkMsg("Your backup is restored.")}catch(e){bkMsg("Restore stopped partway. Try again.")}};
 </script>
 
 </body>
