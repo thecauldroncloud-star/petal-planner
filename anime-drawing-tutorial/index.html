@@ -1,0 +1,683 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Anime Tracing Dojo</title>
+<meta name="description" content="Beginner anime drawing lessons: trace each step with your finger, mouse or stylus and get a score for how closely you followed the line.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@600;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#fff6fa; --surface:#ffffff; --surface-2:#fdebf4; --text:#2b2233; --muted:#76687f;
+  --accent:#e0437f; --accent-soft:#ffd3e5; --accent-2:#7b5cff; --line:#eedbe6; --star:#ffb627;
+  --shadow:0 10px 30px rgba(140,60,110,.12);
+  /* the paper stays light in both themes, like a real sketchbook */
+  --paper:#fffdf8; --ink:#2a2230; --guide:#ff3d8b; --done:#bfb2c9; --base:#e3dbe8; --dot:#7b5cff;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#16121b; --surface:#211b28; --surface-2:#2b2333; --text:#f4ecf8; --muted:#a999b4;
+    --accent:#ff6fa9; --accent-soft:#4a2539; --accent-2:#a08bff; --line:#382e42;
+    --shadow:0 10px 30px rgba(0,0,0,.4);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16121b; --surface:#211b28; --surface-2:#2b2333; --text:#f4ecf8; --muted:#a999b4;
+  --accent:#ff6fa9; --accent-soft:#4a2539; --accent-2:#a08bff; --line:#382e42;
+  --shadow:0 10px 30px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--text);font:16px/1.5 Nunito,system-ui,sans-serif;min-height:100dvh}
+button{font:inherit;color:inherit;cursor:pointer}
+h1,h2,h3{font-family:"Baloo 2",Nunito,sans-serif;line-height:1.15;margin:0}
+[hidden]{display:none!important}
+
+.top{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);background:var(--surface);position:sticky;top:0;z-index:5}
+.brand{background:none;border:0;white-space:nowrap;flex:none;font-family:"Baloo 2";font-weight:800;font-size:1.25rem;color:var(--accent);padding:0;display:flex;align-items:center;gap:8px}
+.brand svg{width:26px;height:26px}
+.crumb{color:var(--muted);font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.top .spacer{flex:1}
+.icon-btn{border:1px solid var(--line);background:var(--surface-2);border-radius:999px;width:38px;height:38px;display:grid;place-items:center;flex:none}
+
+main{max-width:1180px;margin:0 auto;padding:20px 16px 48px}
+
+/* ---------- home ---------- */
+.hero{display:grid;grid-template-columns:1.2fr 1fr;gap:24px;align-items:center;background:linear-gradient(135deg,var(--surface-2),var(--surface));border:1px solid var(--line);border-radius:28px;padding:28px;box-shadow:var(--shadow)}
+.hero h1{font-size:clamp(2rem,5vw,3.1rem);font-weight:800}
+.hero h1 span{color:var(--accent)}
+.hero p{color:var(--muted);font-size:1.08rem;max-width:46ch}
+.hero-art{background:var(--paper);border-radius:22px;aspect-ratio:4/5;max-height:300px;justify-self:center;width:100%;max-width:240px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.05)}
+.hero-art path{fill:none;stroke:var(--ink);stroke-width:3.2;stroke-linecap:round;stroke-linejoin:round}
+.hero-art path.pink{stroke:var(--guide);opacity:.45;stroke-width:4}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:14px;padding:10px 16px;font-weight:800;display:inline-flex;align-items:center;gap:8px;justify-content:center}
+.btn:hover{border-color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{filter:brightness(1.06)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.how{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:22px 0 8px}
+.how div{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px}
+.how b{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:50%;background:var(--accent-soft);color:var(--accent);margin-bottom:6px;font-family:"Baloo 2"}
+.how p{margin:0;color:var(--muted);font-size:.95rem}
+.section-title{display:flex;align-items:baseline;justify-content:space-between;gap:12px;margin:28px 0 12px}
+.section-title h2{font-size:1.6rem}
+.section-title span{color:var(--muted);font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:12px;text-align:left;display:flex;flex-direction:column;gap:10px;transition:transform .15s,box-shadow .15s}
+.card:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--accent)}
+.thumb{background:var(--paper);border-radius:16px;aspect-ratio:4/3;overflow:hidden;display:grid;place-items:center}
+.thumb svg{height:100%;width:auto}
+.thumb path{fill:none;stroke:var(--ink);stroke-width:4;stroke-linecap:round;stroke-linejoin:round}
+.thumb path.b{stroke:#cdc3d4}
+.card .meta{display:flex;justify-content:space-between;align-items:center;font-size:.82rem;color:var(--muted);font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+.card h3{font-size:1.2rem}
+.card p{margin:0;color:var(--muted);font-size:.92rem}
+.stars{color:var(--star);letter-spacing:2px;font-size:1rem}
+.stars .off{color:var(--line)}
+.tips{margin-top:28px;background:var(--surface);border:1px dashed var(--accent);border-radius:22px;padding:18px 20px}
+.tips ul{margin:8px 0 0;padding-left:20px;color:var(--muted)}
+.tips li{margin:4px 0}
+
+/* ---------- lesson ---------- */
+.workspace{display:grid;grid-template-columns:minmax(0,1fr) 340px;grid-template-areas:"paper info" "paper bottom" "tools bottom";grid-template-rows:auto 1fr auto;gap:16px 22px}
+.info{grid-area:info}
+.bottom{grid-area:bottom;display:flex;flex-direction:column;gap:14px}
+.stage{grid-area:paper;display:flex;justify-content:center;align-items:flex-start}
+.toolbar{grid-area:tools}
+.paper{position:relative;width:min(100%,calc((100dvh - 190px)*.8));min-width:260px;aspect-ratio:4/5;background:var(--paper);border-radius:22px;box-shadow:var(--shadow),inset 0 0 0 1px rgba(0,0,0,.06);overflow:hidden;touch-action:none;
+  background-image:radial-gradient(circle,rgba(120,90,140,.13) 1px,transparent 1.4px);background-size:20px 20px}
+.paper svg,.paper canvas{position:absolute;inset:0;width:100%;height:100%}
+.paper canvas{cursor:crosshair;touch-action:none}
+#guide path{fill:none;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+#guide .base{stroke:var(--base);stroke-width:2}
+#guide .done{stroke:var(--done);stroke-width:2.2}
+#guide .current{stroke:var(--guide);stroke-width:5;opacity:.5}
+#guide .demo{stroke:var(--accent-2);stroke-width:5;opacity:.9}
+#guide circle.start{fill:var(--dot);opacity:.85}
+.paper .badge{position:absolute;left:12px;top:12px;background:rgba(255,255,255,.85);color:#5a4a63;border-radius:999px;padding:4px 10px;font-size:.8rem;font-weight:800;pointer-events:none}
+
+.toolbar{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;justify-content:center;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:10px 14px}
+.toolbar label{display:flex;align-items:center;gap:8px;font-weight:700;font-size:.9rem;color:var(--muted)}
+.toolbar input[type=range]{width:96px;accent-color:var(--accent)}
+.toolbar input[type=checkbox]{accent-color:var(--accent);width:18px;height:18px}
+.tool{border:1px solid var(--line);background:var(--surface-2);border-radius:12px;padding:7px 12px;font-weight:800;font-size:.9rem}
+.tool:hover{border-color:var(--accent)}
+
+.panel-box{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:16px 18px}
+.info h2{font-size:1.5rem}
+.info .desc{color:var(--muted);margin:4px 0 12px;font-size:.95rem}
+.dots{display:flex;gap:6px;list-style:none;padding:0;margin:0 0 12px;flex-wrap:wrap}
+.dots li{flex:1;min-width:18px;height:8px;border-radius:99px;background:var(--line)}
+.dots li.done{background:var(--accent-2)}
+.dots li.now{background:var(--accent)}
+.step-num{font-weight:800;color:var(--accent);font-size:.85rem;text-transform:uppercase;letter-spacing:.06em}
+.step-card h3{font-size:1.3rem;margin:2px 0 6px}
+.step-card p{margin:0 0 12px;color:var(--muted)}
+.meter-label{display:flex;justify-content:space-between;font-weight:800}
+.meter-label b{font-family:"Baloo 2";font-size:1.4rem;color:var(--accent)}
+.bar{height:12px;border-radius:99px;background:var(--surface-2);overflow:hidden;margin:6px 0}
+.bar i{display:block;height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--accent-2),var(--accent));transition:width .35s}
+.meter p{margin:0;color:var(--muted);font-size:.92rem;min-height:1.4em}
+.nav{display:flex;gap:10px}
+.nav .btn{flex:1}
+.finish h3{font-size:1.5rem}
+.finish .big-stars{font-size:2.2rem;color:var(--star);letter-spacing:4px;margin:4px 0}
+.finish .big-stars .off{color:var(--line)}
+.finish ul{list-style:none;padding:0;margin:8px 0 14px;color:var(--muted);font-size:.92rem}
+.finish li{display:flex;justify-content:space-between;border-bottom:1px dashed var(--line);padding:4px 0}
+.finish .actions{display:grid;gap:8px}
+.kbd{color:var(--muted);font-size:.8rem;text-align:center}
+
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%) translateY(20px);background:var(--text);color:var(--bg);padding:10px 18px;border-radius:999px;font-weight:800;opacity:0;transition:.25s;pointer-events:none;z-index:20}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media (max-width:860px){
+  .hero{grid-template-columns:1fr;padding:20px}
+  .hero-art{max-width:180px}
+  .how{grid-template-columns:1fr}
+  .workspace{grid-template-columns:minmax(0,1fr);grid-template-areas:"info" "paper" "tools" "bottom";grid-template-rows:auto}
+  .paper{width:100%;min-width:0}
+  .info .desc{display:none}
+  .crumb{display:none}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <button class="brand" id="homeBtn" aria-label="All lessons">
+    <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M7 25 L22 10 L26 14 L11 29 L6 30 Z" fill="currentColor" opacity=".25"/><path d="M7 25 L22 10 L26 14 L11 29 L6 30 Z M20 12 L24 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><circle cx="9" cy="8" r="2.2" fill="currentColor"/><circle cx="25" cy="25" r="1.6" fill="currentColor"/></svg>
+    Anime Tracing Dojo
+  </button>
+  <span class="crumb" id="crumb"></span>
+  <span class="spacer"></span>
+  <button class="icon-btn" id="themeBtn" title="Switch light / dark" aria-label="Switch light or dark theme"><svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><circle cx="12" cy="12" r="8" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 4 A8 8 0 0 1 12 20 Z" fill="currentColor"/></svg></button>
+</header>
+
+<main>
+  <!-- HOME -->
+  <section id="home">
+    <div class="hero">
+      <div>
+        <h1>Learn to draw <span>anime</span> by tracing</h1>
+        <p>Seven short lessons for total beginners. Each one breaks a drawing into small steps. Trace the pink line, watch your score go up, and your hand learns the shapes.</p>
+        <button class="btn primary" id="startBtn">Start lesson 1 →</button>
+      </div>
+      <svg class="hero-art" id="heroArt" viewBox="0 0 400 500" aria-hidden="true"></svg>
+    </div>
+
+    <div class="how">
+      <div><b>1</b><h3>Watch</h3><p>Tap <em>Watch the stroke</em> to see where each line starts and which way it goes.</p></div>
+      <div><b>2</b><h3>Trace</h3><p>Follow the pink guide with your finger, mouse or stylus. Earlier steps stay on the page in grey.</p></div>
+      <div><b>3</b><h3>Level up</h3><p>Get stars for accuracy, then hide the guide and try the drawing from memory.</p></div>
+    </div>
+
+    <div class="section-title"><h2>Lessons</h2><span id="progressTxt"></span></div>
+    <div class="grid" id="lessonGrid"></div>
+
+    <div class="tips">
+      <h3>Beginner tips before you start</h3>
+      <ul>
+        <li>Hold the pen loosely and move your whole arm, not just your fingers. Long lines come out smoother.</li>
+        <li>Draw each line in one quick, confident stroke. Slow, shaky lines are harder to keep on the guide.</li>
+        <li>Messed up? Press <b>Undo</b> (or Ctrl+Z) and go again. Every artist redraws lines.</li>
+        <li>Use a stylus for pressure-sensitive lines: press harder for thicker strokes.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- LESSON -->
+  <section id="lesson" hidden>
+    <div class="workspace">
+      <div class="info panel-box">
+        <h2 id="lTitle"></h2>
+        <p class="desc" id="lDesc"></p>
+        <ol class="dots" id="dots"></ol>
+        <div class="step-card" id="stepCard">
+          <div class="step-num" id="stepNum"></div>
+          <h3 id="sTitle"></h3>
+          <p id="sTip"></p>
+          <button class="btn" id="demoBtn">▶ Watch the stroke</button>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="paper" id="paper">
+          <svg id="guide" viewBox="0 0 400 500" preserveAspectRatio="none" aria-hidden="true"></svg>
+          <canvas id="ink" aria-label="Drawing area: trace the pink line"></canvas>
+          <span class="badge" id="badge" hidden>Memory mode: no guide</span>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <label>Pen <input type="range" id="brush" min="1.5" max="10" step="0.5" value="3.5"></label>
+        <label>Guide <input type="range" id="guideOp" min="0.15" max="1" step="0.05" value="1"></label>
+        <label><input type="checkbox" id="hideGuide"> Hide guide</label>
+        <button class="tool" id="undoBtn">↶ Undo</button>
+        <button class="tool" id="clearBtn">Clear step</button>
+      </div>
+
+      <div class="bottom">
+        <div class="panel-box meter" id="meter">
+          <div class="meter-label"><span>Trace match</span><b id="scoreTxt">–</b></div>
+          <div class="bar"><i id="scoreBar"></i></div>
+          <p id="scoreMsg"></p>
+        </div>
+        <div class="nav" id="nav">
+          <button class="btn" id="prevBtn">← Back</button>
+          <button class="btn primary" id="nextBtn">Next step →</button>
+        </div>
+        <div class="panel-box finish" id="finish" hidden>
+          <h3>Lesson complete! ✿</h3>
+          <div class="big-stars" id="finStars"></div>
+          <ul id="finList"></ul>
+          <div class="actions">
+            <button class="btn primary" id="nextLessonBtn">Next lesson →</button>
+            <button class="btn" id="memoryBtn">Draw it from memory (no guide)</button>
+            <button class="btn" id="saveBtn">⬇ Save my drawing</button>
+            <button class="btn" id="againBtn">Trace it again</button>
+          </div>
+        </div>
+        <p class="kbd">Shortcuts: Ctrl+Z undo · ← → change step · Space to watch</p>
+      </div>
+    </div>
+  </section>
+</main>
+<div class="toast" id="toast"></div>
+
+<script>
+(() => {
+"use strict";
+const W = 400, H = 500;
+
+/* ---------- path helpers (all coordinates absolute, so they can be mirrored) ---------- */
+const n = v => +v.toFixed(1);
+function ell(cx, cy, rx, ry = rx) {
+  const k = 0.5523, ox = rx * k, oy = ry * k;
+  return `M${n(cx-rx)},${n(cy)} C${n(cx-rx)},${n(cy-oy)} ${n(cx-ox)},${n(cy-ry)} ${n(cx)},${n(cy-ry)} ` +
+         `C${n(cx+ox)},${n(cy-ry)} ${n(cx+rx)},${n(cy-oy)} ${n(cx+rx)},${n(cy)} ` +
+         `C${n(cx+rx)},${n(cy+oy)} ${n(cx+ox)},${n(cy+ry)} ${n(cx)},${n(cy+ry)} ` +
+         `C${n(cx-ox)},${n(cy+ry)} ${n(cx-rx)},${n(cy+oy)} ${n(cx-rx)},${n(cy)} Z`;
+}
+const mirror = d => d.replace(/(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/g, (_, x, y) => `${n(W - +x)},${y}`);
+const both = (...ds) => ds.flatMap(d => [d, mirror(d)]);
+
+/* ---------- shared drawing parts ---------- */
+const HEAD_CIRCLE = ell(200, 200, 110);
+const CROSS = ["M200,70 L200,392", "M80,232 L320,232"];
+const JAW = "M96,235 C105,300 160,350 200,372 C240,350 295,300 304,235";
+const EARS = both("M96,220 C72,210 70,260 101,268");
+const NECK = both("M166,346 L169,438", "M169,438 C150,452 112,458 72,470");
+const FACE = ["M96,235 C84,150 132,90 200,90 C268,90 316,150 304,235", JAW, ...EARS, ...NECK];
+
+const BROWS = both("M118,198 Q146,186 176,194");
+const LASH = both("M104,234 L114,227 Q146,205 182,222");
+const LOWER = both("M130,268 Q150,273 170,266");
+const IRIS = both(ell(150, 245, 20, 26));
+const PUPIL = [ell(150, 249, 9, 12), ell(250, 249, 9, 12), ell(159, 234, 6), ell(259, 234, 6), ell(142, 259, 3), ell(242, 259, 3)];
+const EYES = [...BROWS, ...LASH, ...LOWER, ...IRIS, ...PUPIL];
+
+const NOSE = ["M200,284 L195,299 L203,300"];
+const MOUTH = ["M184,328 Q200,336 216,328"];
+const BLUSH = both("M122,292 L116,302", "M134,292 L128,302", "M146,292 L140,302");
+
+const HAIR_VOL = ["M88,240 C64,118 128,56 200,56 C272,56 336,118 312,240"];
+const BANGS = [
+  "M98,182 Q114,198 120,216 Q122,182 134,152 Q150,182 160,210 Q166,172 182,142 Q192,172 200,204 Q206,172 220,142 Q234,172 240,210 Q250,182 266,152 Q278,182 280,216 Q286,198 302,182",
+  "M200,62 C190,90 186,116 182,142", "M200,62 C210,90 214,116 220,142",
+  "M148,78 C140,108 136,130 134,152", "M252,78 C260,108 264,130 266,152"
+];
+const SIDE_LOCKS = both("M98,196 C92,258 96,312 114,352 C118,312 120,268 121,218");
+const BACK_HAIR = both("M88,240 C86,300 80,356 66,404");
+const AHOGE = ["M202,58 C196,28 216,16 236,28 C220,28 210,38 206,58"];
+const HAIR = [...HAIR_VOL, ...BANGS, ...SIDE_LOCKS, ...BACK_HAIR, ...AHOGE];
+
+/* ---------- lessons ---------- */
+const LESSONS = [
+  { id: "warmup", title: "Warm-up Lines", level: "Lesson 1", desc: "Loosen up your hand with the basic strokes every anime drawing is made of.",
+    steps: [
+      { title: "Straight lines", tip: "Start at the purple dot and pull the line across in one smooth move. Use your arm, not your wrist.",
+        paths: ["M60,70 L340,70", "M60,110 L340,110", "M60,150 L340,150"] },
+      { title: "Zig-zags", tip: "Sharp corners are used for spiky anime hair. Pause for a moment at each point, then change direction.",
+        paths: ["M60,190 L120,250 L180,190 L240,250 L300,190 L340,230"] },
+      { title: "Smooth S-curves", tip: "Curves like this are used for hair strands and clothing folds. Keep moving so the curve doesn't get bumpy.",
+        paths: ["M60,320 C120,270 180,370 240,320 C280,290 320,300 340,320"] },
+      { title: "Circles", tip: "Circles are the base of every head and eye. Go around once, quickly. A slightly wobbly circle is fine.",
+        paths: [ell(110, 420, 45), ell(220, 425, 38), ell(310, 430, 28)] }
+    ] },
+
+  { id: "head", title: "The Anime Head", level: "Lesson 2", desc: "Build a front-facing head from a circle, guide lines and a pointed jaw.",
+    steps: [
+      { title: "The skull circle", tip: "Every anime head starts as a big circle. It's the top and back of the skull.", paths: [HEAD_CIRCLE] },
+      { title: "Guide cross", tip: "The vertical line is the middle of the face. The horizontal line shows where the eyes go, a little below the middle of the circle.", paths: CROSS },
+      { title: "Jaw and chin", tip: "Start on the side of the circle, curve down and in, and meet in a soft point on the centre line. Anime chins are small and narrow.", paths: [JAW] },
+      { title: "Ears", tip: "The ears sit between the eye line and the bottom of the circle. Draw a small 'C' shape on each side.", paths: EARS },
+      { title: "Neck and shoulders", tip: "The neck is thinner than you think. Draw two lines down from under the ears, then sweep out to the shoulders.", paths: NECK }
+    ] },
+
+  { id: "eyes", title: "Sparkly Anime Eyes", level: "Lesson 3", desc: "The eyes are the heart of anime style. Learn the lash line, iris and highlights.",
+    base: [HEAD_CIRCLE, ...CROSS, JAW, ...EARS, ...NECK],
+    steps: [
+      { title: "Eyebrows", tip: "Thin, gentle arcs high above the eyes. Leave space! Anime brows float well above the eye.", paths: BROWS },
+      { title: "Upper lash line", tip: "This is the boldest line on the face. Press a little harder, and flick a small tick out at the outer corner.", paths: LASH },
+      { title: "Lower lid", tip: "Just a short, light curve. Don't close the eye shape: the gaps make it look anime.", paths: LOWER },
+      { title: "Tall iris", tip: "Anime irises are tall ovals that tuck up under the lash line.", paths: IRIS },
+      { title: "Pupil and highlights", tip: "Add the pupil, then a big highlight at the top and a tiny one at the bottom. Keep highlights on the same side in both eyes, as if light comes from one direction.", paths: PUPIL }
+    ] },
+
+  { id: "face", title: "Nose, Mouth & Blush", level: "Lesson 4", desc: "Small, simple marks finish the face. Less is more in anime style.",
+    base: [HEAD_CIRCLE, ...CROSS, ...FACE, ...EYES],
+    steps: [
+      { title: "Tiny nose", tip: "Anime noses are just a little hook or a tick on the centre line, halfway between the eyes and the chin.", paths: NOSE },
+      { title: "Smile", tip: "A short, soft curve. Keep it small and close to the nose.", paths: MOUTH },
+      { title: "Blush lines", tip: "Three quick diagonal dashes on each cheek. Flick them fast, like hatching.", paths: BLUSH }
+    ] },
+
+  { id: "hair", title: "Anime Hair", level: "Lesson 5", desc: "Big volume, spiky bangs and the famous 'ahoge' strand.",
+    base: [...FACE, ...EYES, ...NOSE, ...MOUTH],
+    steps: [
+      { title: "Hair volume", tip: "Hair sits on top of the skull, so draw the outline well above the head. Give it plenty of puff.", paths: HAIR_VOL },
+      { title: "Spiky bangs", tip: "Zig-zag across the forehead, then add a few strands from the crown down to the tips. Remember the zig-zag warm-up!", paths: BANGS },
+      { title: "Side locks", tip: "Long locks frame the face. Draw down past the cheek and come back up to a point.", paths: SIDE_LOCKS },
+      { title: "Back hair", tip: "Long sweeping lines behind the shoulders. Use your S-curve skills.", paths: BACK_HAIR },
+      { title: "Ahoge", tip: "The cute 'antenna' strand on top! A quick loop that sticks up from the crown.", paths: AHOGE }
+    ] },
+
+  { id: "expressions", title: "Happy Expression", level: "Lesson 6", desc: "Change only the eyes and mouth to make a character beam with joy.",
+    base: [...FACE, ...HAIR, ...NOSE],
+    steps: [
+      { title: "Happy closed eyes", tip: "Upside-down 'U' shapes, like ^ ^. Closed eyes are easy and super expressive.", paths: both("M120,250 Q148,224 178,250") },
+      { title: "Raised brows", tip: "Lift the brows higher and rounder for a joyful look.", paths: both("M122,200 Q148,184 174,194") },
+      { title: "Big open smile", tip: "Draw a straight top edge, then a deep curve below it, like a slice of watermelon.", paths: ["M180,316 L220,316 Q218,350 200,352 Q182,350 180,316 Z"] },
+      { title: "Tongue", tip: "A small curve inside the lower part of the mouth.", paths: ["M188,340 Q200,331 212,340"] },
+      { title: "Sparkles", tip: "Four-point stars around the head add energy. Draw them as four little curves pulled in towards the centre.", paths: [
+          "M335,110 Q338,128 355,132 Q338,136 335,154 Q332,136 315,132 Q332,128 335,110 Z",
+          "M62,120 Q64,132 76,134 Q64,136 62,148 Q60,136 48,134 Q60,132 62,120 Z",
+          "M345,300 Q347,310 357,312 Q347,314 345,324 Q343,314 333,312 Q343,310 345,300 Z"] }
+    ] },
+
+  { id: "chibi", title: "Chibi Character", level: "Lesson 7", desc: "Put it all together: a cute chibi with a giant head and a tiny body.",
+    steps: [
+      { title: "Big head and guides", tip: "Chibis are about 2 heads tall, so the head is huge: a wide circle with a guide cross.", paths: [ell(200, 170, 105, 98), "M200,72 L200,268", "M95,196 L305,196"] },
+      { title: "Face", tip: "Big round eyes sit low on the face, wide apart. Add highlights and a tiny smile.", paths: [ell(160, 210, 16, 22), ell(240, 210, 16, 22), ell(165, 201, 5), ell(245, 201, 5), "M192,244 Q200,251 208,244"] },
+      { title: "Hair", tip: "Puffy outline, then zig-zag bangs. It's the same idea as Lesson 5, only rounder.", paths: ["M92,186 C78,96 140,60 200,60 C260,60 322,96 308,186",
+          "M100,152 Q120,170 126,188 Q134,152 150,128 Q160,160 172,178 Q182,140 200,120 Q214,150 226,178 Q238,152 250,128 Q262,160 274,188 Q282,168 300,152"] },
+      { title: "Little body", tip: "The body is about as tall as half the head. A simple flared dress or shirt shape works great.", paths: ["M172,266 C160,300 150,350 144,382 L256,382 C250,350 240,300 228,266"] },
+      { title: "Arms and legs", tip: "Short stubby arms with round hands, and short legs with oval shoes. Chibis don't need fingers or knees!", paths: [
+          ...both("M170,284 C152,310 142,334 138,354", "M182,382 L182,436"), ell(136, 362, 10), ell(264, 362, 10), ell(178, 446, 18, 10), ell(222, 446, 18, 10)] }
+    ] }
+];
+
+/* ---------- storage (never required) ---------- */
+const STORE = "atd-progress-v1";
+let progress = {};
+try { progress = JSON.parse(localStorage.getItem(STORE) || "{}") || {}; } catch { progress = {}; }
+const saveProgress = () => { try { localStorage.setItem(STORE, JSON.stringify(progress)); } catch {} };
+
+/* ---------- theme ---------- */
+const root = document.documentElement;
+try { const t = localStorage.getItem("atd-theme"); if (t) root.dataset.theme = t; } catch {}
+document.getElementById("themeBtn").onclick = () => {
+  const dark = root.dataset.theme ? root.dataset.theme === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+  root.dataset.theme = dark ? "light" : "dark";
+  try { localStorage.setItem("atd-theme", root.dataset.theme); } catch {}
+};
+
+/* ---------- dom ---------- */
+const $ = id => document.getElementById(id);
+const home = $("home"), lesson = $("lesson"), svg = $("guide"), canvas = $("ink"), paper = $("paper");
+const ctx = canvas.getContext("2d");
+const allPaths = l => [...(l.base || []), ...l.steps.flatMap(s => s.paths)];
+const starHtml = k => [0, 1, 2].map(i => `<span class="${i < k ? "" : "off"}">★</span>`).join("");
+const starsFor = s => s >= 85 ? 3 : s >= 65 ? 2 : s >= 40 ? 1 : 0;
+const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+function toast(msg) { const t = $("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove("show"), 1800); }
+
+/* ---------- home ---------- */
+function renderHome() {
+  const grid = $("lessonGrid");
+  grid.innerHTML = "";
+  LESSONS.forEach((l, i) => {
+    const p = progress[l.id];
+    const card = document.createElement("button");
+    card.className = "card";
+    const finalPaths = l.steps.flatMap(s => s.paths).map(d => `<path d="${d}"/>`).join("");
+    const basePaths = (l.base || []).map(d => `<path class="b" d="${d}"/>`).join("");
+    card.innerHTML = `<div class="thumb"><svg viewBox="0 0 400 500">${basePaths}${finalPaths}</svg></div>
+      <div class="meta"><span>${l.level} · ${l.steps.length} steps</span><span class="stars">${starHtml(p ? p.stars : 0)}</span></div>
+      <h3>${esc(l.title)}</h3><p>${esc(l.desc)}</p>`;
+    card.onclick = () => openLesson(i);
+    grid.appendChild(card);
+  });
+  const done = LESSONS.filter(l => progress[l.id]).length;
+  $("progressTxt").textContent = `${done} / ${LESSONS.length} complete`;
+  const chibi = LESSONS[LESSONS.length - 1];
+  $("heroArt").innerHTML = chibi.steps.flatMap((s, si) => s.paths.map(d => `<path class="${si === 4 ? "pink" : ""}" d="${d}"/>`)).join("");
+  const next = LESSONS.findIndex(l => !progress[l.id]);
+  $("startBtn").textContent = next <= 0 ? "Start lesson 1 →" : next === -1 ? "Practise again →" : `Continue: lesson ${next + 1} →`;
+  $("startBtn").onclick = () => openLesson(Math.max(0, next));
+}
+
+function showHome() {
+  lesson.hidden = true; home.hidden = false; $("crumb").textContent = "";
+  renderHome(); window.scrollTo(0, 0);
+}
+$("homeBtn").onclick = showHome;
+
+/* ---------- lesson state ---------- */
+let L = null, li = 0, stepIdx = 0, strokes = [], scores = [], finished = false, memory = false, cur = null, penSeen = false;
+let scale = 1, dpr = 1;
+
+function openLesson(i, opts = {}) {
+  li = i; L = LESSONS[i]; stepIdx = 0; strokes = []; scores = L.steps.map(() => 0); finished = false;
+  memory = !!opts.memory;
+  $("hideGuide").checked = memory;
+  home.hidden = true; lesson.hidden = false;
+  $("crumb").textContent = `· ${L.level}: ${L.title}`;
+  $("lTitle").textContent = L.title; $("lDesc").textContent = L.desc;
+  window.scrollTo(0, 0);
+  resize(); renderStep();
+}
+
+function renderStep() {
+  const s = L.steps[stepIdx];
+  $("dots").innerHTML = L.steps.map((_, i) => `<li class="${finished || i < stepIdx ? "done" : i === stepIdx ? "now" : ""}"></li>`).join("");
+  $("stepCard").hidden = finished;
+  $("meter").hidden = finished; $("nav").hidden = finished; $("finish").hidden = !finished;
+  if (!finished) {
+    $("stepNum").textContent = `Step ${stepIdx + 1} of ${L.steps.length}`;
+    $("sTitle").textContent = s.title; $("sTip").textContent = s.tip;
+    $("prevBtn").disabled = stepIdx === 0;
+    $("nextBtn").textContent = stepIdx === L.steps.length - 1 ? "Finish ✿" : "Next step →";
+    $("demoBtn").disabled = memory;
+  }
+  renderGuide(); redraw(); updateScore();
+}
+
+function renderGuide() {
+  const hide = $("hideGuide").checked;
+  $("badge").hidden = !hide;
+  svg.style.opacity = $("guideOp").value;
+  if (hide) { svg.innerHTML = ""; return; }
+  let h = (L.base || []).map(d => `<path class="base" d="${d}"/>`).join("");
+  L.steps.forEach((s, i) => {
+    if (finished || i < stepIdx) h += s.paths.map(d => `<path class="done" d="${d}"/>`).join("");
+    else if (i === stepIdx) h += s.paths.map(d => `<path class="current" d="${d}"/>`).join("");
+  });
+  svg.innerHTML = h;
+  if (!finished) {
+    svg.querySelectorAll("path.current").forEach(p => {
+      const pt = p.getPointAtLength(0);
+      const c = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      c.setAttribute("class", "start"); c.setAttribute("cx", pt.x); c.setAttribute("cy", pt.y); c.setAttribute("r", 5);
+      svg.appendChild(c);
+    });
+  }
+}
+
+/* ---------- demo animation ---------- */
+function playDemo() {
+  if (finished || memory || $("hideGuide").checked) return;
+  svg.querySelectorAll(".demo").forEach(nd => nd.remove());
+  const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let delay = 0;
+  svg.querySelectorAll("path.current").forEach(p => {
+    const len = p.getTotalLength();
+    const dur = reduce ? 1 : Math.min(2200, Math.max(500, len * 3.2));
+    const c = p.cloneNode(); c.setAttribute("class", "demo");
+    c.style.strokeDasharray = len; c.style.strokeDashoffset = len;
+    svg.appendChild(c);
+    c.animate([{ strokeDashoffset: len }, { strokeDashoffset: 0 }], { duration: dur, delay, fill: "forwards", easing: "ease-in-out" });
+    delay += dur + 180;
+  });
+  clearTimeout(playDemo.t);
+  playDemo.t = setTimeout(() => svg.querySelectorAll(".demo").forEach(nd => nd.remove()), delay + 900);
+}
+$("demoBtn").onclick = playDemo;
+
+/* ---------- canvas drawing ---------- */
+function resize() {
+  const r = paper.getBoundingClientRect();
+  if (!r.width) return;
+  dpr = window.devicePixelRatio || 1;
+  canvas.width = Math.round(r.width * dpr); canvas.height = Math.round(r.height * dpr);
+  scale = r.width / W;
+  redraw();
+}
+new ResizeObserver(() => { if (!lesson.hidden) resize(); }).observe(paper);
+
+const inkColor = () => getComputedStyle(root).getPropertyValue("--ink").trim() || "#2a2230";
+const mid = (a, b) => ({ x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 });
+
+function strokeSegments(c, st, widthOverride) {
+  const p = st.pts;
+  if (p.length === 1) {
+    c.beginPath(); c.arc(p[0].x, p[0].y, (widthOverride || p[0].w) / 2, 0, Math.PI * 2); c.fill(); return;
+  }
+  for (let i = 1; i < p.length; i++) drawSeg(c, p, i, widthOverride);
+}
+function drawSeg(c, p, i, widthOverride) {
+  // quadratic through midpoints for a smooth line
+  const a = i === 1 ? p[0] : mid(p[i - 2], p[i - 1]);
+  const ctrl = p[i - 1];
+  const b = mid(p[i - 1], p[i]);
+  c.lineWidth = widthOverride || (p[i - 1].w + p[i].w) / 2;
+  c.beginPath(); c.moveTo(a.x, a.y);
+  if (i === 1) c.lineTo(b.x, b.y); else c.quadraticCurveTo(ctrl.x, ctrl.y, b.x, b.y);
+  c.stroke();
+}
+function finishTail(c, st, widthOverride) {
+  const p = st.pts; if (p.length < 2) return;
+  const a = mid(p[p.length - 2], p[p.length - 1]), b = p[p.length - 1];
+  c.lineWidth = widthOverride || b.w; c.beginPath(); c.moveTo(a.x, a.y); c.lineTo(b.x, b.y); c.stroke();
+}
+function setupInk(c, color) { c.lineCap = "round"; c.lineJoin = "round"; c.strokeStyle = c.fillStyle = color; }
+
+function redraw() {
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.setTransform(dpr * scale, 0, 0, dpr * scale, 0, 0);
+  setupInk(ctx, inkColor());
+  for (const st of strokes) { strokeSegments(ctx, st); finishTail(ctx, st); }
+}
+
+function toPoint(e) {
+  const r = canvas.getBoundingClientRect();
+  const x = (e.clientX - r.left) / r.width * W, y = (e.clientY - r.top) / r.height * H;
+  const size = +$("brush").value;
+  const w = e.pointerType === "pen" && e.pressure > 0 ? size * (0.35 + e.pressure * 1.3) : size;
+  return { x, y, w };
+}
+
+canvas.addEventListener("pointerdown", e => {
+  if (finished) { toast("Tap “Trace it again” or “Draw it from memory” to keep drawing"); return; }
+  if (e.pointerType === "pen") penSeen = true;
+  if (e.pointerType === "touch" && penSeen) return; // palm rejection once a stylus is used
+  if (e.button > 0) return;
+  e.preventDefault();
+  canvas.setPointerCapture(e.pointerId);
+  cur = { step: stepIdx, pts: [toPoint(e)], id: e.pointerId };
+  strokes.push(cur);
+  ctx.setTransform(dpr * scale, 0, 0, dpr * scale, 0, 0);
+  setupInk(ctx, inkColor());
+  strokeSegments(ctx, cur);
+});
+canvas.addEventListener("pointermove", e => {
+  if (!cur || e.pointerId !== cur.id) return;
+  const evs = e.getCoalescedEvents ? e.getCoalescedEvents() : [e];
+  for (const ev of (evs.length ? evs : [e])) {
+    const pt = toPoint(ev), last = cur.pts[cur.pts.length - 1];
+    if (Math.hypot(pt.x - last.x, pt.y - last.y) < 0.6) continue;
+    cur.pts.push(pt);
+    drawSeg(ctx, cur.pts, cur.pts.length - 1);
+  }
+});
+function endStroke(e) {
+  if (!cur || (e && e.pointerId !== cur.id)) return;
+  cur = null; redraw(); updateScore();
+}
+canvas.addEventListener("pointerup", endStroke);
+canvas.addEventListener("pointercancel", endStroke);
+
+/* ---------- scoring ---------- */
+const sc = document.createElement("canvas"); sc.width = W; sc.height = H;
+const sctx = sc.getContext("2d", { willReadFrequently: true });
+function mask(fn) {
+  sctx.setTransform(1, 0, 0, 1, 0, 0); sctx.clearRect(0, 0, W, H);
+  setupInk(sctx, "#000"); fn(sctx);
+  return sctx.getImageData(0, 0, W, H).data;
+}
+function guideMask(paths, width) { return mask(c => { c.lineWidth = width; paths.forEach(d => c.stroke(new Path2D(d))); }); }
+function userMask(list, width) { return mask(c => list.forEach(st => { strokeSegments(c, st, width); finishTail(c, st, width); })); }
+function overlap(a, b) { let hit = 0, tot = 0; for (let i = 3; i < a.length; i += 4) if (a[i] > 40) { tot++; if (b[i] > 40) hit++; } return tot ? hit / tot : 0; }
+
+function computeScore(idx) {
+  const mine = strokes.filter(s => s.step === idx);
+  if (!mine.length) return 0;
+  const paths = L.steps[idx].paths;
+  const recall = overlap(guideMask(paths, 3), userMask(mine, 22));   // how much of the guide you covered
+  const precision = overlap(userMask(mine, 3), guideMask(paths, 22)); // how much of your ink is on the guide
+  if (!recall || !precision) return 0;
+  return Math.round(100 * Math.min(1, (2 * recall * precision) / (recall + precision) * 1.05));
+}
+
+function updateScore() {
+  if (finished || !L) return;
+  const s = computeScore(stepIdx);
+  scores[stepIdx] = s;
+  $("scoreTxt").textContent = strokes.some(st => st.step === stepIdx) ? s + "%" : "–";
+  $("scoreBar").style.width = s + "%";
+  const msg = !strokes.some(st => st.step === stepIdx)
+    ? (memory ? "No guide this time. Draw it from memory!" : "Start at the purple dot and trace the pink line.")
+    : s < 40 ? "Keep going: trace along the whole pink line."
+    : s < 65 ? "Nice! Try to stay a little closer to the line."
+    : s < 85 ? "Great tracing! ✨ Ready for the next step."
+    : "Sugoi! Almost perfect! 🌸";
+  $("scoreMsg").textContent = msg;
+}
+
+/* ---------- controls ---------- */
+function undo() {
+  if (finished) return;
+  for (let i = strokes.length - 1; i >= 0; i--) if (strokes[i].step === stepIdx) { strokes.splice(i, 1); break; }
+  redraw(); updateScore();
+}
+$("undoBtn").onclick = undo;
+$("clearBtn").onclick = () => { if (finished) return; strokes = strokes.filter(s => s.step !== stepIdx); redraw(); updateScore(); };
+$("guideOp").oninput = () => { svg.style.opacity = $("guideOp").value; };
+$("hideGuide").onchange = () => { renderGuide(); renderStep(); };
+$("prevBtn").onclick = () => { if (stepIdx > 0) { stepIdx--; renderStep(); } };
+$("nextBtn").onclick = () => {
+  scores[stepIdx] = computeScore(stepIdx);
+  if (stepIdx < L.steps.length - 1) { stepIdx++; renderStep(); setTimeout(playDemo, 250); }
+  else finishLesson();
+};
+
+function finishLesson() {
+  finished = true;
+  const avg = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
+  const stars = starsFor(avg);
+  const prev = progress[L.id];
+  if (!prev || avg > prev.best) progress[L.id] = { best: avg, stars: Math.max(stars, prev ? prev.stars : 0) };
+  else if (!prev.stars && stars) prev.stars = stars;
+  saveProgress();
+  $("finStars").innerHTML = starHtml(stars);
+  $("finList").innerHTML = L.steps.map((s, i) => `<li><span>${esc(s.title)}</span><b>${scores[i]}%</b></li>`).join("") +
+    `<li><span><b>Average${memory ? " (from memory!)" : ""}</b></span><b>${avg}%</b></li>`;
+  $("nextLessonBtn").hidden = li >= LESSONS.length - 1;
+  renderStep();
+  toast(stars === 3 ? "Perfect! ★★★" : stars ? "Lesson complete!" : "Lesson complete: practice makes perfect!");
+}
+$("nextLessonBtn").onclick = () => openLesson(Math.min(li + 1, LESSONS.length - 1));
+$("againBtn").onclick = () => openLesson(li);
+$("memoryBtn").onclick = () => openLesson(li, { memory: true });
+$("saveBtn").onclick = () => {
+  const out = document.createElement("canvas"), k = 2;
+  out.width = W * k; out.height = H * k;
+  const o = out.getContext("2d");
+  o.fillStyle = "#fffdf8"; o.fillRect(0, 0, out.width, out.height);
+  o.setTransform(k, 0, 0, k, 0, 0); setupInk(o, "#2a2230");
+  strokes.forEach(st => { strokeSegments(o, st); finishTail(o, st); });
+  out.toBlob(b => {
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(b); a.download = `anime-${L.id}.png`; a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 2000);
+  });
+};
+
+document.addEventListener("keydown", e => {
+  if (lesson.hidden || e.target.matches("input")) return;
+  if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") { e.preventDefault(); undo(); }
+  else if (e.key === "ArrowRight" && !finished) $("nextBtn").click();
+  else if (e.key === "ArrowLeft" && !finished) $("prevBtn").click();
+  else if (e.key === " " && !finished) { e.preventDefault(); playDemo(); }
+});
+
+renderHome();
+})();
+</script>
+</body>
+</html>
