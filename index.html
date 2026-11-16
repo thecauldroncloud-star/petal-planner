@@ -325,8 +325,8 @@ function monthHeader(title){
 
 /* ---------- calendar ---------- */
 
-const MAXPH=10;
-const LAYOUTS={1:[[6,4]],2:[[3,4],[3,4]],3:[[4,4],[2,2],[2,2]],4:[[4,4],[2,2],[2,2],[6,2]],5:[[3,3],[3,3],[2,2],[2,2],[2,2]],
+const MAXPH=4;
+const LAYOUTS={1:[[6,4]],2:[[3,4],[3,4]],3:[[4,4],[2,2],[2,2]],4:[[4,6],[2,2],[2,2],[2,2]],5:[[3,3],[3,3],[2,2],[2,2],[2,2]],
  6:[[4,4],[2,2],[2,2],[2,2],[2,2],[2,2]],7:[[4,4],[2,2],[2,2],[2,2],[2,2],[2,2],[6,2]],8:[[3,3],[3,3],[2,2],[2,2],[2,2],[2,2],[2,2],[2,2]],
  9:[[4,4],[2,2],[2,2],[2,2],[2,2],[2,2],[2,2],[2,2],[2,2]],10:[[3,4],[3,2],[3,2],[2,2],[2,2],[2,2],[2,2],[2,2],[2,2],[6,3]]};
 const TILT=[-1.2,.9,-.6,1.4,-1,.5,1.1,-1.3,.7,-.4];
@@ -340,16 +340,16 @@ function photoBlock(){
   const saveMeta=()=>{const m=meta();save(key,{ids:m.ids,cap:m.cap||""})};
   file.onchange=async()=>{
     const m=meta();const room=MAXPH-m.ids.length;const fs=[...file.files];file.value="";
-    if(room<=0){setStatus("This month already has 10 photos");return}
+    if(room<=0){setStatus("This month already has "+MAXPH+" photos");return}
     const pick=fs.slice(0,room);setStatus("Adding "+pick.length+" photo"+(pick.length>1?"s":"")+"…");
     for(const f of pick){try{const img=await shrink(f);const id=pid();photoImgs[id]=img;save("ph"+mm+"_"+id,{img});m.ids.push(id)}catch(e){}}
-    saveMeta();if(fs.length>room)setTimeout(()=>setStatus("Added "+pick.length+". The limit is 10 photos a month."),1000);
+    saveMeta();if(fs.length>room)setTimeout(()=>setStatus("Added "+pick.length+". The limit is "+MAXPH+" photos a month."),1000);
     if(cur===mm&&tab==="cal")draw();
   };
   async function draw(){
     const m=meta();wrap.replaceChildren(file);
     if(!m.ids.length){
-      wrap.append(el("div",{class:"photo-empty"},el("span",{},"Make a collage for "+MONTHS[mm-1]+". Add up to 10 photos: memories, moods, places you love."),el("button",{class:"btn",onclick:()=>file.click()},"Add photos")));return}
+      wrap.append(el("div",{class:"photo-empty"},el("span",{},"Make a collage for "+MONTHS[mm-1]+". Add up to 4 photos: memories, moods, places you love."),el("button",{class:"btn",onclick:()=>file.click()},"Add photos")));return}
     const lay=LAYOUTS[m.ids.length];
     const grid=el("div",{class:"collage"});
     m.ids.forEach((id,i)=>{
@@ -368,7 +368,7 @@ function photoBlock(){
     const cap=el("input",{type:"text",id:"photocap",placeholder:"Caption (optional)",value:m.cap||""});cap.oninput=()=>{m.cap=cap.value;saveMeta()};
     const left=MAXPH-m.ids.length;
     wrap.append(fr,el("div",{class:"photo-bar"},cap,
-      left>0?el("button",{class:"btn ghost small",onclick:()=>file.click()},"Add photos ("+left+" left)"):el("span",{class:"sub"},"10 of 10 photos")));
+      left>0?el("button",{class:"btn ghost small",onclick:()=>file.click()},"Add photos ("+left+" left)"):el("span",{class:"sub"},MAXPH+" of "+MAXPH+" photos")));
   }
   if(photoCache[mm]===undefined){photoCache[mm]=null;load(key).then(async d=>{
     d=d||{};let ids=Array.isArray(d.ids)?d.ids.slice(0,MAXPH):[];

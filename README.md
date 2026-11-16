@@ -4,7 +4,7 @@ An undated cherry-blossom planner in pastel purple that installs to your phone's
 
 Pages for each month (January to December, no dates or year):
 
-- Calendar with a monthly photo
+- Calendar with a collage of up to 4 photos
 - Period tracker
 - Doodle page with a motivational quote
 - To-do list
