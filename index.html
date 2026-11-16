@@ -192,6 +192,19 @@ body{background-image:radial-gradient(circle at 8% 12%,color-mix(in srgb,var(--p
 .photo-empty{border:2px dashed var(--petal);border-radius:var(--r);padding:22px;display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:center;color:var(--muted);text-align:center;background:color-mix(in srgb,var(--petal) 10%,transparent)}
 .photo-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .photo-bar input[type=text]{flex:1 1 200px}
+.collage-frame{position:relative;padding:10px;border-radius:var(--r);background:var(--lilac-soft);box-shadow:0 0 0 1.5px var(--petal)}
+.collage{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));grid-auto-rows:clamp(34px,7.2vw,66px);gap:8px}
+.tile{margin:0;position:relative;border-radius:10px;overflow:hidden;background:var(--bg);border:4px solid var(--paper);box-shadow:0 2px 8px color-mix(in srgb,var(--ink) 18%,transparent);transform:rotate(var(--tilt));transition:transform .2s}
+.tile:hover{transform:rotate(0) scale(1.02);z-index:2}
+@media (prefers-reduced-motion:reduce){.tile{transition:none}}
+.tile img{width:100%;height:100%;object-fit:cover;display:block}
+.tile.missing{background:repeating-linear-gradient(45deg,var(--lilac-soft) 0 8px,var(--bg) 8px 16px)}
+.tile-tools{position:absolute;top:4px;right:4px;display:flex;gap:4px}
+.tbtn{width:28px;height:28px;border-radius:50%;border:none;background:color-mix(in srgb,var(--paper) 88%,transparent);color:var(--ink);font-size:.95rem;cursor:pointer;display:grid;place-items:center;padding:0}
+.tbtn:hover{background:var(--paper);color:var(--accent)}
+@media (max-width:560px){.tbtn{width:22px;height:22px;font-size:.75rem}.collage{gap:6px}.tile{border-width:3px}}
+.collage-frame .pf-bloom{position:absolute;width:64px;pointer-events:none;z-index:3}
+.collage-frame .tl{left:-14px;top:-14px}.collage-frame .br{right:-14px;bottom:-14px;transform:rotate(180deg)}
 .backup{display:flex;gap:6px;margin-top:6px}
 [hidden]{display:none!important}
 </style>
@@ -244,7 +257,7 @@ const FLOW=["None","Spotting","Light","Medium","Heavy"];
 
 let db=null, uid=null, mode="local";
 let cur=1, tab="cal";
-const cache={}, doodleCache={}, photoCache={};
+const cache={}, doodleCache={}, photoCache={}, photoImgs={};
 const $=s=>document.querySelector(s);
 const el=(t,a={},...kids)=>{const e=document.createElement(t);for(const[k,v]of Object.entries(a)){if(k==="class")e.className=v;else if(k.startsWith("on"))e.addEventListener(k.slice(2),v);else if(v!==false&&v!=null)e.setAttribute(k,v===true?"":v)}for(const k of kids.flat())if(k!=null)e.append(k.nodeType?k:document.createTextNode(k));return e};
 const clone=o=>JSON.parse(JSON.stringify(o));
@@ -298,24 +311,56 @@ function monthHeader(title){
 
 /* ---------- calendar ---------- */
 
+const MAXPH=10;
+const LAYOUTS={1:[[6,4]],2:[[3,4],[3,4]],3:[[4,4],[2,2],[2,2]],4:[[4,4],[2,2],[2,2],[6,2]],5:[[3,3],[3,3],[2,2],[2,2],[2,2]],
+ 6:[[4,4],[2,2],[2,2],[2,2],[2,2],[2,2]],7:[[4,4],[2,2],[2,2],[2,2],[2,2],[2,2],[6,2]],8:[[3,3],[3,3],[2,2],[2,2],[2,2],[2,2],[2,2],[2,2]],
+ 9:[[4,4],[2,2],[2,2],[2,2],[2,2],[2,2],[2,2],[2,2],[2,2]],10:[[3,4],[3,2],[3,2],[2,2],[2,2],[2,2],[2,2],[2,2],[2,2],[6,3]]};
+const TILT=[-1.2,.9,-.6,1.4,-1,.5,1.1,-1.3,.7,-.4];
+function shrink(f){return new Promise((res,rej)=>{const rd=new FileReader();rd.onerror=rej;rd.onload=()=>{const im=new Image();im.onerror=rej;im.onload=()=>{const k=Math.min(1,900/Math.max(im.width,im.height));const c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);res(c.toDataURL("image/jpeg",.78))};im.src=rd.result};rd.readAsDataURL(f)})}
+const pid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
 function photoBlock(){
   const mm=cur,key="p"+mm;
   const wrap=el("div",{class:"photo"});
-  const file=el("input",{type:"file",accept:"image/*",id:"photofile",hidden:true});
-  file.onchange=()=>{const f=file.files[0];if(!f)return;const rd=new FileReader();rd.onload=()=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1200/Math.max(im.width,im.height));const c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);const ph=photoCache[mm]||{};ph.img=c.toDataURL("image/jpeg",.82);photoCache[mm]=ph;save(key,ph);if(cur===mm)draw()};im.onerror=()=>setStatus("That file couldn't be read as a photo");im.src=rd.result};rd.readAsDataURL(f);file.value=""};
-  function draw(){
-    const ph=photoCache[mm];wrap.replaceChildren(file);
-    if(!ph||!ph.img){
-      wrap.append(el("div",{class:"photo-empty"},el("span",{},"Add a photo for "+MONTHS[mm-1]+": a memory, a mood, a place you love."),el("button",{class:"btn",onclick:()=>file.click()},"Add photo")));return}
-    const fr=el("div",{class:"photo-frame"},el("img",{src:ph.img,alt:ph.cap||("Photo for "+MONTHS[mm-1])}));
+  const file=el("input",{type:"file",accept:"image/*",multiple:true,id:"photofile",hidden:true});
+  const meta=()=>photoCache[mm]||(photoCache[mm]={ids:[],cap:""});
+  const saveMeta=()=>{const m=meta();save(key,{ids:m.ids,cap:m.cap||""})};
+  file.onchange=async()=>{
+    const m=meta();const room=MAXPH-m.ids.length;const fs=[...file.files];file.value="";
+    if(room<=0){setStatus("This month already has 10 photos");return}
+    const pick=fs.slice(0,room);setStatus("Adding "+pick.length+" photo"+(pick.length>1?"s":"")+"…");
+    for(const f of pick){try{const img=await shrink(f);const id=pid();photoImgs[id]=img;save("ph"+mm+"_"+id,{img});m.ids.push(id)}catch(e){}}
+    saveMeta();if(fs.length>room)setTimeout(()=>setStatus("Added "+pick.length+". The limit is 10 photos a month."),1000);
+    if(cur===mm&&tab==="cal")draw();
+  };
+  async function draw(){
+    const m=meta();wrap.replaceChildren(file);
+    if(!m.ids.length){
+      wrap.append(el("div",{class:"photo-empty"},el("span",{},"Make a collage for "+MONTHS[mm-1]+". Add up to 10 photos: memories, moods, places you love."),el("button",{class:"btn",onclick:()=>file.click()},"Add photos")));return}
+    const lay=LAYOUTS[m.ids.length];
+    const grid=el("div",{class:"collage"});
+    m.ids.forEach((id,i)=>{
+      const [c,r]=lay[i];
+      const img=el("img",{alt:"Photo "+(i+1)+" for "+MONTHS[mm-1]});
+      const fig=el("figure",{class:"tile",style:`grid-column:span ${c};grid-row:span ${r};--tilt:${TILT[i]}deg`},img,
+        el("div",{class:"tile-tools"},
+          i>0?el("button",{class:"tbtn","aria-label":"Make this the main photo",title:"Make main photo",onclick:()=>{m.ids.splice(i,1);m.ids.unshift(id);saveMeta();draw()}},"★"):null,
+          el("button",{class:"tbtn","aria-label":"Remove photo "+(i+1),title:"Remove",onclick:()=>{m.ids.splice(i,1);delete photoImgs[id];save("ph"+mm+"_"+id,{});saveMeta();draw()}},"×")));
+      grid.append(fig);
+      const show=src=>{if(src)img.src=src;else fig.classList.add("missing")};
+      if(photoImgs[id]!==undefined)show(photoImgs[id]);else load("ph"+mm+"_"+id).then(d=>{photoImgs[id]=d?.img||"";show(photoImgs[id])});
+    });
+    const fr=el("div",{class:"collage-frame"},grid);
     fr.insertAdjacentHTML("beforeend",BLOOM.replace("<svg",'<svg class="pf-bloom tl" aria-hidden="true"')+BLOOM.replace("<svg",'<svg class="pf-bloom br" aria-hidden="true"'));
-    const cap=el("input",{type:"text",id:"photocap",placeholder:"Caption (optional)",value:ph.cap||""});cap.oninput=()=>{ph.cap=cap.value;save(key,ph)};
-    const rmc=el("span",{class:"confirm",hidden:true},"Remove this photo?",el("button",{class:"btn small",onclick:()=>{photoCache[mm]={};save(key,{});draw()}},"Remove"),el("button",{class:"btn ghost small",onclick:()=>{rmc.hidden=true;rm.hidden=false}},"Keep"));
-    const rm=el("button",{class:"btn ghost small",onclick:()=>{rmc.hidden=false;rm.hidden=true}},"Remove");
-    wrap.append(fr,el("div",{class:"photo-bar"},cap,el("button",{class:"btn ghost small",onclick:()=>file.click()},"Change photo"),rm,rmc));
+    const cap=el("input",{type:"text",id:"photocap",placeholder:"Caption (optional)",value:m.cap||""});cap.oninput=()=>{m.cap=cap.value;saveMeta()};
+    const left=MAXPH-m.ids.length;
+    wrap.append(fr,el("div",{class:"photo-bar"},cap,
+      left>0?el("button",{class:"btn ghost small",onclick:()=>file.click()},"Add photos ("+left+" left)"):el("span",{class:"sub"},"10 of 10 photos")));
   }
-  draw();
-  if(photoCache[mm]===undefined){photoCache[mm]=null;load(key).then(d=>{photoCache[mm]=d||{};if(cur===mm&&tab==="cal")draw()})}
+  if(photoCache[mm]===undefined){photoCache[mm]=null;load(key).then(async d=>{
+    d=d||{};let ids=Array.isArray(d.ids)?d.ids.slice(0,MAXPH):[];
+    if(!ids.length&&d.img){const id=pid();photoImgs[id]=d.img;save("ph"+mm+"_"+id,{img:d.img});ids=[id];save(key,{ids,cap:d.cap||""})}
+    photoCache[mm]={ids,cap:d.cap||""};if(cur===mm&&tab==="cal")draw()})}
+  else draw();
   return wrap;
 }
 function renderCal(p){
