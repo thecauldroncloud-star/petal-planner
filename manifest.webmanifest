@@ -1,15 +1,28 @@
 {
-  "name": "Petal Planner",
-  "short_name": "Petal Planner",
-  "description": "An undated cherry-blossom planner: calendar, period, doodles, to-dos, money and fitness.",
+  "name": "Pretty & Productive",
+  "short_name": "Pretty & Productive",
+  "description": "An undated seasonal planner: calendar, period, doodles, to-dos, money and fitness.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#f3eefb",
   "theme_color": "#f3eefb",
   "icons": [
-    {"src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png"},
-    {"src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png"},
-    {"src": "icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }

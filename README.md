@@ -1,6 +1,6 @@
-# Petal Planner
+# Pretty & Productive
 
-An undated cherry-blossom planner in pastel purple that installs to your phone's home screen and works offline.
+An undated planner with four seasonal themes that installs to your phone's home screen and works offline.
 
 Pages for each month (January to December, no dates or year):
 
@@ -17,4 +17,4 @@ Pages for each month (January to December, no dates or year):
 1. Open `https://thecauldroncloud-star.github.io/petal-planner/` in Safari.
 2. Tap Share, then Add to Home Screen.
 
-Your entries are stored only on your phone. Use **Back up** in the app to save a copy, and **Restore** to load it on a new phone.
+Your entries are stored only on your phone. Open **Settings** at the bottom of the app to choose a theme (Cherry Blossom, Summer Lilac & Lavender Dreams, Autumn in My Heart, Winter Wonderland), back up your planner, or restore a backup on a new phone.
